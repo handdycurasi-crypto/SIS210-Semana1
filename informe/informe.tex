@@ -1,0 +1,722 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[letterpaper,top=2.5cm,bottom=2.5cm,left=2.8cm,right=2.5cm]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,tabularx,array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[round,authoryear]{natbib}
+\usepackage{hyperref}
+
+\renewcommand{\contentsname}{Índice}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\refname}{Referencias}
+
+\definecolor{azulUNA}{HTML}{172A5B}
+\definecolor{azulClaro}{HTML}{EAF0FA}
+\definecolor{grisCodigo}{HTML}{F5F6F8}
+\definecolor{verdeCodigo}{HTML}{236B3C}
+\definecolor{moradoCodigo}{HTML}{6A3D9A}
+\hypersetup{colorlinks=true,linkcolor=azulUNA,citecolor=azulUNA,urlcolor=blue,pdftitle={Algoritmos, TAD, correccion y modelo RAM},pdfauthor={Yana Mendoza; Belizario Yana; Curasi Zevallos}}
+\setstretch{1.18}
+\setlength{\parindent}{1.1cm}
+\setlength{\parskip}{0.25em}
+\setlist{itemsep=0.25em,topsep=0.4em}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+\titleformat{\section}{\Large\bfseries\color{azulUNA}}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{azulUNA}}{\thesubsection.}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{azulUNA}}{\thesubsubsection.}{0.6em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small SIS210 -- Algoritmos y Estructuras de Datos}
+\fancyhead[R]{\small Semana 1}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{15pt}
+
+\lstdefinestyle{codigo}{
+  backgroundcolor=\color{grisCodigo},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{azulUNA}\bfseries,
+  commentstyle=\color{verdeCodigo},
+  stringstyle=\color{moradoCodigo},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  frame=single,
+  rulecolor=\color{gray!45},
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=4,
+  xleftmargin=0.8em,
+  framexleftmargin=0.5em,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+
+\newcommand{\codigo}[1]{\texttt{#1}}
+\newcommand{\Ogrande}[1]{\ensuremath{O(#1)}}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+{\large\bfseries UNIVERSIDAD NACIONAL DEL ALTIPLANO -- PUNO\par}
+\vspace{0.35cm}
+{\normalsize Facultad de Ingeniería Mecánica Eléctrica, Electrónica y Sistemas\par}
+{\normalsize Escuela Profesional de Ingeniería de Sistemas\par}
+\vfill
+{\color{azulUNA}\rule{0.9\textwidth}{1.2pt}\par}
+\vspace{0.6cm}
+{\LARGE\bfseries ALGORITMOS, TIPOS ABSTRACTOS DE DATOS, CORRECCIÓN Y MODELO RAM\par}
+\vspace{0.35cm}
+{\Large Trabajo académico de la Semana 1\par}
+\vspace{0.6cm}
+{\color{azulUNA}\rule{0.9\textwidth}{1.2pt}\par}
+\vfill
+\begin{tabular}{>{\bfseries}p{4.2cm}p{9.3cm}}
+Curso: & Algoritmos y Estructuras de Datos -- SIS210\\[0.25cm]
+Docente: & ZANABRIA GALVEZ ALDO HERNAN\\[0.25cm]
+Integrantes: & YANA MENDOZA CARLOS BENEDICTO\\
+& BELIZARIO YANA DAVID VICTOR\\
+& CURASI ZEVALLOS HANDDY RONALD\\[0.25cm]
+Semestre académico: & 2026--II
+\end{tabular}
+\vfill
+{\large Puno, Perú\par}
+{\large 2026\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\hypersetup{pageanchor=true}
+\pagenumbering{arabic}
+
+\section{Introducción}
+
+Los algoritmos y las estructuras de datos constituyen una base para expresar soluciones computacionales de manera ordenada, verificable y eficiente. Antes de estudiar estructuras específicas o técnicas avanzadas de análisis, resulta necesario comprender qué condiciones hacen que un procedimiento pueda considerarse algoritmo, cómo se separa una operación abstracta de su representación concreta y de qué manera se razona sobre la corrección y el costo de una solución. El material oficial de la Semana 1 organiza precisamente estos fundamentos y los relaciona mediante un ejercicio sencillo pero representativo: encontrar el valor máximo de un arreglo \citep{zanabria2026,cormen2022,sedgewick2011}.
+
+El presente trabajo amplía esos contenidos sin apartarse del alcance introductorio de la unidad. Primero se desarrolla el concepto de algoritmo y sus propiedades; después se estudian los tipos primitivos y los tipos abstractos de datos; luego se explica la corrección parcial y total mediante precondiciones, postcondiciones e invariantes; finalmente se aplica el modelo RAM para contar operaciones. La teoría se conecta con implementaciones ejecutables en Python y C++, con una prueba común de 24 elementos y con la comparación entre un recorrido lineal y dos ciclos anidados.
+
+\section{Objetivos}
+
+\subsection{Objetivo general}
+
+Analizar de manera fundamentada los conceptos introductorios de algoritmos, tipos abstractos de datos, corrección y costo computacional, aplicándolos a la implementación y verificación del algoritmo que encuentra el máximo de un arreglo en Python y C++.
+
+\subsection{Objetivos específicos}
+
+\begin{itemize}
+  \item Explicar el concepto de algoritmo y sus propiedades de entrada, salida, finitud, definición precisa y efectividad.
+  \item Diferenciar los tipos de datos primitivos de los TAD y distinguir la interfaz abstracta de su implementación.
+  \item Formular la especificación de \codigo{encontrar\_maximo} mediante precondición, postcondición y tripleta de Hoare.
+  \item Demostrar la corrección del recorrido usando un invariante y las etapas de inicio, preservación y finalización.
+  \item Contar operaciones elementales con un criterio RAM explícito y comparar crecimientos lineal y cuadrático.
+  \item Ejecutar las implementaciones de Python y C++ y registrar evidencia verificable de sus resultados.
+\end{itemize}
+
+\clearpage
+\section{Marco teórico}
+
+\subsection{Algoritmos y resolución de problemas}
+
+\subsubsection{Concepto de algoritmo}
+
+Un algoritmo es un procedimiento computacional bien definido que recibe ciertos valores, llamados entrada, y produce otros valores, llamados salida, mediante una secuencia finita de pasos. Esta definición une tres ideas: existe un problema previamente delimitado, hay una transformación que conduce desde los datos disponibles hasta el resultado y cada paso posee un significado operacional. Por ello, un algoritmo no es una lista arbitraria de instrucciones, sino una descripción organizada de cómo resolver todas las instancias que satisfacen las condiciones del problema \citep{zanabria2026,cormen2022,knuth1997}.
+
+Conviene diferenciar algoritmo y programa. El algoritmo expresa la estrategia de solución en un nivel que puede ser independiente de un lenguaje; el programa es una realización concreta escrita con la sintaxis y los tipos de Python, C++ u otro lenguaje. El mismo recorrido para buscar un máximo puede programarse con un \codigo{for}, un \codigo{while}, iteradores o funciones de biblioteca, y estas versiones pueden implementar la misma idea esencial. Esta distinción permite discutir la solución antes de quedar condicionados por detalles sintácticos \citep{cormen2022,sedgewick2011,skiena2020}.
+
+También debe diferenciarse un algoritmo de una descripción cotidiana incompleta. La indicación ``ordenar los números'' señala una meta, pero no determina los pasos para alcanzarla; en cambio, comparar elementos y efectuar intercambios bajo reglas establecidas sí describe un procedimiento. En una receta ocurre algo parecido: si se indican ingredientes, orden de acciones, condiciones y finalización, puede reconocerse una estructura algorítmica, aunque la computación formal exige eliminar ambigüedades que una persona resolvería por experiencia \citep{zanabria2026,cormen2022,goodrichpy2013}.
+
+El diseño algorítmico parte de identificar con precisión qué se conoce, qué debe obtenerse y qué restricciones existen. Para el problema de este informe, se conoce un arreglo no vacío de valores comparables y se desea devolver uno de ellos que sea mayor o igual que todos los demás. A partir de esa especificación se propone mantener un máximo provisional y actualizarlo al encontrar un elemento mayor. La estrategia es sencilla, pero permite conectar especificación, corrección y eficiencia en un solo ejemplo \citep{cormen2022,goodrichcpp2011,skiena2020}.
+
+\subsubsection{Entrada y salida}
+
+La entrada está formada por los valores que una instancia entrega al algoritmo. No se limita a aquello que una persona escribe por teclado: puede provenir de un archivo, una estructura en memoria, un sensor o la llamada de otra función. Lo importante es que su dominio esté especificado. En \codigo{encontrar\_maximo}, la entrada es una secuencia finita y no vacía de valores que admiten comparación; su tamaño se representa mediante $n$ \citep{zanabria2026,cormen2022,goodrichpy2013}.
+
+La salida es el resultado que debe satisfacer la condición establecida por el problema. Para una misma entrada pueden existir problemas con una salida única o con varias respuestas válidas; por ejemplo, el valor máximo es único como valor aunque aparezca en varias posiciones. Definir la salida evita confundir lo que el procedimiento calcula con información auxiliar como el índice del ciclo o el máximo provisional. En este trabajo, la salida requerida es un valor $m$ perteneciente al arreglo tal que todo elemento es menor o igual que $m$ \citep{cormen2022,hoare1969,goodrichcpp2011}.
+
+La relación entrada--salida constituye el contrato esencial de la solución. Una implementación puede imprimir mensajes adicionales durante una prueba, pero su función principal debe preservar esa relación. Por ello, las versiones desarrolladas devuelven el máximo y el programa de prueba se ocupa separadamente de mostrarlo y contrastarlo con una función estándar. Separar cálculo y presentación facilita reutilizar la función y razonar sobre ella \citep{liskov1974,sedgewick2011,goodrichpy2013}.
+
+\subsection{Características y propiedades de un algoritmo}
+
+\subsubsection{Finitud}
+
+La finitud exige que el procedimiento termine después de un número finito de pasos para cada entrada admitida. No basta con que cada instrucción sea comprensible si el proceso puede continuar indefinidamente. En un recorrido de arreglo, la finitud se justifica mostrando que el índice avanza y que existe un límite fijo dado por $n$. Tras procesar el último elemento, la condición del ciclo deja de cumplirse y se obtiene la salida \citep{zanabria2026,cormen2022,hoare1969}.
+
+La finitud depende tanto de la estructura del algoritmo como de sus condiciones de entrada. Un ciclo que disminuye una variable positiva en una unidad termina si esa variable pertenece a los enteros no negativos, pero la misma afirmación puede fallar si no se fija el dominio o si el cuerpo no garantiza el avance. En las demostraciones formales suele utilizarse una cantidad variante que disminuye y está acotada inferiormente; para \codigo{encontrar\_maximo}, la cantidad $n-i$ disminuye en cada iteración \citep{hoare1969,dijkstra1975,cormen2022}.
+
+Finitud no significa rapidez. Un algoritmo puede terminar siempre y, sin embargo, requerir una cantidad impráctica de operaciones cuando la entrada crece. Esta observación separa dos preguntas: ``¿terminará y dará la respuesta correcta?'' y ``¿cuántos recursos necesitará?''. La primera pertenece a la corrección total; la segunda, al análisis de costo. Ambas son necesarias para evaluar una solución, pero no deben confundirse \citep{cormen2022,skiena2020,sedgewick2011}.
+
+\subsubsection{Definición precisa}
+
+La definición precisa establece que cada paso debe interpretarse sin ambigüedad. Expresiones como ``elegir un número grande'' o ``repetir varias veces'' no son suficientes si no se determina qué significa grande o cuántas repeticiones corresponden. En un algoritmo formal se especifican las condiciones, los datos afectados y el orden de ejecución. Esta precisión permite que distintas personas o máquinas apliquen el procedimiento de la misma manera \citep{zanabria2026,cormen2022,knuth1997}.
+
+La precisión también abarca casos límite. Decir que se toma el primer elemento como máximo provisional presupone que existe un primer elemento; por eso la entrada no puede estar vacía. Asimismo, debe aclararse si los valores pueden ser negativos, si están repetidos y qué tipo de comparación se utiliza. Las implementaciones del proyecto aceptan enteros negativos y repetidos, pero rechazan explícitamente un arreglo vacío, lo que hace visible la condición que el algoritmo original supone \citep{goodrichpy2013,goodrichcpp2011,sedgewick2011}.
+
+Un pseudocódigo puede ser preciso sin copiar todos los detalles de un lenguaje real. Su propósito es expresar las operaciones relevantes y ocultar aspectos que no cambian la estrategia, como la forma exacta de declarar un vector. No obstante, cuando se cuenta el costo, algunos de esos detalles vuelven a importar: un \codigo{for} contiene de manera implícita inicialización, verificación e incremento. Por eso el nivel de abstracción debe declararse antes de producir una fórmula exacta \citep{cormen2022,knuth1997,cook1973}.
+
+\subsubsection{Efectividad}
+
+La efectividad exige que cada operación sea suficientemente elemental para poder realizarse de manera exacta y en tiempo finito. Asignar un valor, sumar dos números de tamaño acotado, comparar dos elementos y acceder a una posición de memoria son ejemplos usuales en el modelo introductorio. En cambio, una instrucción como ``encontrar mágicamente la mejor solución'' no constituye un paso efectivo porque oculta el trabajo que debe efectuarse \citep{zanabria2026,cook1973,cormen2022}.
+
+La efectividad relaciona la descripción abstracta con la posibilidad de implementación. Una operación puede presentarse como una unidad en un nivel y descomponerse en varias operaciones en otro. Por ejemplo, obtener el máximo mediante una función de biblioteca es efectivo, pero para analizar la estrategia interesa abrir esa operación y reconocer el recorrido y las comparaciones que realiza. Esta elección de granularidad es fundamental para construir un conteo consistente \citep{sedgewick2011,skiena2020,knuth1997}.
+
+También existen límites prácticos al supuesto de operaciones constantes. La suma de enteros almacenados en una palabra de máquina suele tratarse como constante, pero trabajar con enteros de longitud arbitraria puede hacer que el costo dependa de la cantidad de dígitos. En la Semana 1 se adopta deliberadamente el modelo RAM elemental y valores que caben en una palabra, porque el objetivo es aprender a contar y comparar crecimientos sin introducir todavía modelos más complejos \citep{cook1973,cormen2022,zanabria2026}.
+
+\subsubsection{Relación entre las cinco propiedades}
+
+Entrada, salida, finitud, definición precisa y efectividad se complementan. La entrada delimita las instancias; la salida fija el resultado esperado; la precisión elimina interpretaciones alternativas; la efectividad asegura que los pasos puedan realizarse; y la finitud garantiza que el proceso llegue a entregar la salida. Omitir una sola propiedad puede convertir una idea intuitiva en una especificación insuficiente o en un proceso no ejecutable \citep{zanabria2026,cormen2022,knuth1997}.
+
+Estas propiedades no demuestran por sí solas que el resultado sea correcto. Un procedimiento puede ser finito, preciso y efectivo, pero devolver una respuesta equivocada. Por ello se necesita relacionar los estados del programa con afirmaciones lógicas y comprobar que cada paso conserva la verdad necesaria. La teoría de corrección amplía así la definición operacional del algoritmo con una garantía sobre su comportamiento \citep{hoare1969,dijkstra1975,cormen2022}.
+
+\subsection{Tipos de datos primitivos}
+
+Los tipos primitivos son categorías básicas provistas directamente por un lenguaje o por su modelo de ejecución. Entre ellos suelen encontrarse enteros, números de punto flotante, booleanos y caracteres. Un tipo determina qué valores puede almacenar una variable y qué operaciones elementales pueden aplicarse sobre ellos. Por ejemplo, un entero admite suma y comparación, mientras que un booleano representa condiciones verdaderas o falsas \citep{goodrichpy2013,goodrichcpp2011,sedgewick2011}.
+
+La denominación ``primitivo'' depende del lenguaje. C++ distingue tipos fundamentales como \codigo{int}, \codigo{double}, \codigo{char} y \codigo{bool}, con representaciones vinculadas a la plataforma. Python ofrece objetos integrados como \codigo{int}, \codigo{float}, \codigo{bool} y \codigo{str}; aunque internamente sean objetos, funcionan como bloques básicos para el programador. Lo relevante para este nivel es que el lenguaje ya define sus valores y operaciones principales \citep{goodrichpy2013,goodrichcpp2011,python2026}.
+
+Los tipos primitivos no expresan por sí solos políticas complejas de organización. Un conjunto de enteros puede almacenarse en un arreglo, pero la idea de una pila incluye además una regla: el último elemento insertado es el primero que se retira. Esa regla de comportamiento no pertenece al entero ni al arreglo aislado, sino a una abstracción definida mediante operaciones y restricciones. Esta necesidad conduce a los tipos abstractos de datos \citep{liskov1974,sedgewick2011,skiena2020}.
+
+\subsection{Tipos abstractos de datos}
+
+\subsubsection{Definición y propósito}
+
+Un tipo abstracto de datos (TAD) especifica un dominio de valores y un conjunto de operaciones observables sin imponer una representación interna única. El usuario del TAD conoce qué operaciones puede solicitar, qué condiciones requieren y qué resultados producen; la estructura concreta usada para almacenarlo permanece separada. Esta forma de abstracción fue desarrollada como un mecanismo para organizar programas alrededor de contratos estables \citep{liskov1974,zanabria2026,sedgewick2011}.
+
+El TAD no debe entenderse solamente como ``un grupo de datos''. Incluye comportamiento. Una pila se caracteriza por operaciones como crear, apilar, consultar el tope, desapilar y comprobar si está vacía; una cola, por insertar al final y retirar desde el frente. Dos colecciones pueden contener exactamente los mismos elementos y diferir como TAD por las reglas que determinan el próximo elemento accesible \citep{sedgewick2011,goodrichpy2013,goodrichcpp2011}.
+
+La abstracción reduce la cantidad de detalles que deben mantenerse simultáneamente. Quien usa una pila puede razonar con las operaciones \codigo{apilar} y \codigo{desapilar}, mientras quien la implementa se ocupa de índices, nodos o ampliaciones de capacidad. Esta división favorece la modularidad y permite reemplazar una representación siempre que se conserve el comportamiento prometido por la interfaz \citep{liskov1974,sedgewick2011,skiena2020}.
+
+\subsubsection{Interfaz e implementación}
+
+La interfaz describe qué puede hacerse con el TAD. Incluye nombres de operaciones, parámetros, resultados y condiciones relevantes. La implementación describe cómo se almacenan los valores y cómo se ejecuta cada operación. Por ejemplo, una interfaz de pila puede ofrecer \codigo{push}, \codigo{pop} y \codigo{top}; una implementación puede usar un arreglo redimensionable y otra una lista enlazada \citep{liskov1974,goodrichcpp2011,sedgewick2011}.
+
+Cambiar la implementación puede modificar el consumo de memoria, el costo de una operación o la forma de gestionar capacidad, pero no debe alterar el significado observable de la interfaz. Si \codigo{pop} deja de retirar el último elemento insertado, no se trata simplemente de otra implementación: se ha violado el contrato de la pila. Por ello la independencia entre interfaz e implementación no elimina obligaciones; las concentra en una especificación común \citep{liskov1974,goodrichpy2013,skiena2020}.
+
+La separación puede observarse en lenguajes distintos. Python ofrece listas con operaciones integradas que permiten implementar una pila; C++ ofrece contenedores y adaptadores como \codigo{vector} o \codigo{stack}. Sin embargo, el concepto LIFO es independiente de la sintaxis de cualquiera de esos lenguajes. Estudiar primero el TAD permite reconocer la misma estructura conceptual aunque cambien las herramientas concretas \citep{python2026,goodrichcpp2011,sedgewick2011}.
+
+\begin{table}[htbp]
+\centering
+\caption{Diferencia entre abstracción e implementación}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{3cm}XX}
+\toprule
+Aspecto & TAD / interfaz & Implementación concreta\\
+\midrule
+Pregunta central & ¿Qué operaciones y reglas ofrece? & ¿Cómo se almacenan y ejecutan?\\
+Visibilidad & Contrato observable por el usuario & Detalles internos ocultables\\
+Ejemplo de pila & apilar, desapilar, tope, está vacía & arreglo dinámico o lista enlazada\\
+Posibilidad de cambio & Debe conservar su significado & Puede sustituirse por otra representación\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Ejemplos fundamentales de TAD}
+
+La pila sigue la política LIFO: el último elemento que entra es el primero que sale. Resulta útil para deshacer acciones, evaluar expresiones o gestionar llamadas. La cola sigue la política FIFO: el primero que entra es el primero que sale, como ocurre en la atención de solicitudes. En ambos casos, la política de acceso define la abstracción, no el material con el que se construye \citep{sedgewick2011,goodrichpy2013,goodrichcpp2011}.
+
+Una lista describe una secuencia ordenada de elementos con operaciones para insertar, eliminar, consultar o recorrer posiciones. Puede implementarse mediante un arreglo contiguo o mediante nodos enlazados. Estas representaciones ofrecen comportamientos equivalentes desde la interfaz, pero presentan costos distintos: acceder por índice es directo en un arreglo, mientras insertar cerca de un nodo conocido puede ser conveniente en una lista enlazada \citep{goodrichpy2013,goodrichcpp2011,skiena2020}.
+
+El conjunto modela una colección sin duplicados y suele incluir insertar, eliminar y consultar pertenencia. El diccionario o mapa asocia claves con valores y permite buscar mediante la clave. Sus implementaciones pueden basarse en tablas hash o árboles, decisión que afecta el rendimiento sin cambiar el contrato general. Estos ejemplos muestran que TAD y análisis de eficiencia se relacionan, aunque conceptualmente deban distinguirse \citep{cormen2022,sedgewick2011,skiena2020}.
+
+Incluso el arreglo usado en el ejercicio puede analizarse en dos niveles. Como secuencia indexada ofrece acceso a una posición y conocimiento de su longitud; en Python se representa aquí mediante una lista y en C++ mediante \codigo{std::vector<int>}. El algoritmo requiere solamente recorrido, comparación y acceso a los elementos, de modo que su idea no depende de la representación exacta mientras esas operaciones estén disponibles \citep{goodrichpy2013,goodrichcpp2011,python2026}.
+
+\subsection{Corrección de algoritmos}
+
+\subsubsection{Especificación y significado de corrección}
+
+Un algoritmo es correcto respecto de una especificación cuando produce el resultado exigido para toda entrada que satisface la precondición. La frase ``respecto de una especificación'' es indispensable: no puede evaluarse la corrección sin indicar qué entradas se aceptan y qué relación debe cumplir la salida. Probar algunos ejemplos aporta evidencia, pero no reemplaza una demostración que abarque todas las entradas válidas \citep{hoare1969,cormen2022,zanabria2026}.
+
+Las pruebas experimentales y la demostración formal cumplen funciones complementarias. Ejecutar un programa ayuda a detectar errores concretos y comprueba que la implementación funciona en el entorno utilizado. La demostración estudia la estructura lógica del procedimiento y explica por qué no existe una entrada válida que contradiga la postcondición. En este trabajo se realizan ambas: se prueba un arreglo de 24 elementos y se desarrolla un invariante para el caso general \citep{hoare1969,dijkstra1975,cormen2022}.
+
+La corrección tampoco implica eficiencia. Un método que compare todas las parejas posibles para obtener cierta información puede producir siempre la respuesta correcta y, sin embargo, realizar trabajo innecesario frente a otro método lineal. La corrección responde si la solución cumple; el costo computacional permite comparar cuánto trabajo requiere. Conservar esta diferencia evita rechazar una prueba correcta porque el algoritmo es lento o aceptar un algoritmo rápido que entrega respuestas erróneas \citep{cormen2022,skiena2020,sedgewick2011}.
+
+\subsubsection{Corrección parcial y corrección total}
+
+La corrección parcial afirma que, si el algoritmo termina desde un estado que satisface la precondición, entonces el estado final satisface la postcondición. La afirmación es condicional y no asegura que la terminación ocurra. Esta forma de corrección permite concentrarse primero en la conservación lógica de las propiedades durante la ejecución \citep{zanabria2026,hoare1969,dijkstra1975}.
+
+La corrección total añade la garantía de terminación. Para obtenerla se combinan dos componentes: la prueba de corrección parcial y un argumento que demuestra que el proceso no puede repetirse indefinidamente. En un ciclo sobre $n$ elementos, puede emplearse la cantidad restante $n-i$; es un entero no negativo mientras continúa el ciclo y disminuye estrictamente en cada iteración \citep{hoare1969,dijkstra1975,cormen2022}.
+
+Un ejemplo ayuda a ver la diferencia. Un ciclo que conserva correctamente un máximo provisional pero olvida incrementar el índice puede mantener verdadera su propiedad lógica y aun así no terminar. Bajo corrección parcial, la frase ``si termina, devuelve el máximo'' podría mantenerse sin garantizar una respuesta efectiva. La corrección total detecta la insuficiencia porque exige justificar el progreso hasta la condición de salida \citep{zanabria2026,hoare1969,cormen2022}.
+
+\subsubsection{Lógica de Hoare}
+
+Hoare propuso una notación para relacionar afirmaciones lógicas con instrucciones de programa. Una tripleta $\{P\}\;S\;\{Q\}$ contiene una precondición $P$, un programa o bloque $S$ y una postcondición $Q$. Su lectura para corrección parcial es: si $P$ es verdadera antes de ejecutar $S$ y $S$ termina, entonces $Q$ será verdadera después \citep{hoare1969,zanabria2026,dijkstra1975}.
+
+La precondición delimita lo que el algoritmo puede suponer al comenzar. No es una explicación informal del objetivo, sino un predicado sobre la entrada y el estado inicial. Para \codigo{encontrar\_maximo}, se requiere $n\geq 1$ y que los elementos sean comparables. Si se permitiera $n=0$, la instrucción que accede a la posición cero carecería de un elemento válido \citep{hoare1969,cormen2022,goodrichcpp2011}.
+
+La postcondición expresa lo que debe ser verdadero al finalizar. Puede escribirse como $m\in A$ y $\forall k\in\{0,\ldots,n-1\}: A[k]\leq m$, donde $m$ es el valor devuelto. La pertenencia impide aceptar un valor externo artificialmente grande; la desigualdad confirma que ningún elemento supera al resultado. Juntas caracterizan el máximo del arreglo \citep{hoare1969,cormen2022,zanabria2026}.
+
+La lógica de Hoare permite componer razonamientos locales. Una asignación transforma las condiciones que deben cumplirse; una selección se analiza por sus ramas; y un ciclo necesita una afirmación que permanezca cierta. Este enfoque convierte el programa en objeto de razonamiento matemático y obliga a declarar supuestos que con frecuencia permanecen ocultos en una prueba informal \citep{hoare1969,dijkstra1975,liskov1974}.
+
+\subsubsection{Invariante de ciclo}
+
+Un invariante de ciclo es una proposición que se mantiene verdadera antes de cada iteración y que conecta el trabajo ya realizado con la meta final. No significa que todas las variables mantengan el mismo valor; lo invariable es una relación lógica. En la búsqueda del máximo, después de procesar un prefijo, la variable \codigo{maximo} representa el máximo de ese prefijo \citep{cormen2022,hoare1969,zanabria2026}.
+
+Para el ciclo que comienza con $i=1$, el invariante puede formularse así: antes de cada iteración con índice $i$, \codigo{maximo} es el máximo de $A[0\ldots i-1]$. La afirmación coincide con el avance real del algoritmo: los elementos anteriores a $i$ ya fueron examinados y los que empiezan en $i$ todavía no. Elegir correctamente el intervalo evita errores de uno en los límites \citep{cormen2022,goodrichpy2013,goodrichcpp2011}.
+
+La demostración tiene tres etapas. En el inicio, antes de la primera iteración, $i=1$ y el prefijo procesado contiene solamente $A[0]$; como \codigo{maximo} recibe $A[0]$, el invariante es verdadero. Este caso base muestra que el ciclo comienza desde un estado coherente, no desde una suposición sin establecer \citep{cormen2022,hoare1969,dijkstra1975}.
+
+En la preservación se supone verdadero el invariante al inicio de una iteración. Si $A[i]>\codigo{maximo}$, la asignación reemplaza el máximo anterior por el nuevo elemento; si no, el valor se conserva. En ambos casos, al terminar el cuerpo \codigo{maximo} es el máximo de $A[0\ldots i]$. Tras incrementar $i$, esta es exactamente la afirmación requerida para la siguiente iteración \citep{cormen2022,hoare1969,zanabria2026}.
+
+En la finalización, el ciclo se detiene cuando $i=n$. El invariante afirma entonces que \codigo{maximo} es el máximo de $A[0\ldots n-1]$, que es todo el arreglo. Por tanto se obtiene la postcondición. Si además se observa que $n-i$ disminuye en uno y no puede ser negativo durante el ciclo, se demuestra terminación y se alcanza la corrección total \citep{cormen2022,hoare1969,dijkstra1975}.
+
+Los invariantes no se descubren únicamente manipulando símbolos; suelen surgir al preguntar qué significa el estado parcial del programa. En este caso la variable se llama \codigo{maximo}, pero su significado preciso cambia con el avance: no es todavía el máximo global, sino el máximo de lo revisado. Expresar ese significado permite explicar de manera comprensible el código y después convertirlo en una prueba formal \citep{cormen2022,skiena2020,hoare1969}.
+
+\subsection{Costo computacional y modelo RAM}
+
+\subsubsection{Motivación del análisis}
+
+Medir solamente segundos puede producir conclusiones dependientes del procesador, compilador, lenguaje, carga del sistema y datos concretos. El análisis teórico busca una descripción más estable contando operaciones en función del tamaño de entrada. No pretende negar la utilidad de medir programas reales; ofrece una base independiente para anticipar cómo cambia el trabajo cuando el problema crece \citep{zanabria2026,cormen2022,sedgewick2011}.
+
+El costo computacional puede referirse a tiempo, memoria u otros recursos. En esta introducción se estudia principalmente el tiempo mediante operaciones elementales. Se identifica el tamaño $n$, se determina cuántas veces se ejecuta cada instrucción y se construye una función $T(n)$. Este procedimiento permite comparar un recorrido único con dos recorridos anidados sin necesitar que ambos estén escritos en el mismo lenguaje \citep{cormen2022,skiena2020,knuth1997}.
+
+La elección de entrada relevante depende del problema. Para buscar el máximo, $n$ es el número de elementos. No sería adecuado usar como tamaño el valor numérico del máximo, porque un arreglo de tres enteros puede contener un número muy grande y seguir requiriendo solamente tres posiciones examinadas bajo el modelo adoptado. Definir $n$ correctamente es el primer paso de un análisis coherente \citep{cormen2022,goodrichpy2013,sedgewick2011}.
+
+\subsubsection{Modelo RAM}
+
+El modelo de acceso aleatorio a memoria, o RAM, representa una máquina idealizada con memoria direccionable y un conjunto de instrucciones básicas. En el enfoque introductorio, asignaciones, accesos, comparaciones y operaciones aritméticas sobre palabras de tamaño adecuado se consideran de costo constante. La formalización de Cook y Reckhow permitió estudiar el tiempo de máquinas de acceso aleatorio de manera matemática \citep{cook1973,zanabria2026,cormen2022}.
+
+``Acceso aleatorio'' indica que una posición de memoria puede consultarse directamente mediante su dirección, sin recorrer obligatoriamente todas las posiciones anteriores. Por eso acceder a $A[i]$ se modela como una operación constante. Esta idealización se aproxima al funcionamiento de arreglos en memoria y facilita concentrarse en la cantidad de accesos y operaciones, aunque una computadora real tenga jerarquías de caché y diferencias de latencia \citep{cook1973,knuth1997,cormen2022}.
+
+El modelo debe aplicarse con un criterio declarado. Se puede contar cada línea de alto nivel como una operación o descomponer expresiones y control de ciclos. Ninguna fórmula exacta es universal si dos análisis agrupan operaciones de manera distinta. La comparación válida exige mantener el mismo criterio dentro del análisis y distinguir entre la función exacta obtenida bajo ese criterio y el orden de crecimiento dominante \citep{cormen2022,sedgewick2011,skiena2020}.
+
+\subsubsection{Operaciones elementales}
+
+Una asignación almacena un valor en una variable, como $s\leftarrow 0$ o $i\leftarrow i+1$. Aunque la segunda expresión también contiene una suma, el acto de guardar el resultado se cuenta separadamente en el modelo expandido de este informe. Distinguir evaluación y almacenamiento permite explicar de dónde sale cada término y evita ocultar trabajo en una única línea \citep{zanabria2026,cormen2022,knuth1997}.
+
+Una comparación evalúa una relación y produce una condición lógica. En el algoritmo para encontrar el máximo aparecen comparaciones entre datos, $A[i]>\codigo{maximo}$, y comparaciones de control, $i<n$. La primera decide si se actualiza la respuesta; la segunda decide si continúa el ciclo. Si el enunciado solicita solo comparaciones de datos se obtiene $n-1$; si incluye el control explícito, también se cuentan las evaluaciones de la condición del ciclo \citep{cormen2022,sedgewick2011,goodrichcpp2011}.
+
+Las operaciones aritméticas incluyen suma, resta y multiplicación. En $s=s+i\cdot j$ se realiza una multiplicación y una suma antes de asignar el nuevo valor. Los incrementos $i=i+1$ y $j=j+1$ añaden otras sumas implícitas. En un análisis de alto nivel, los incrementos del \codigo{for} pueden quedar agrupados; en uno expandido deben hacerse visibles y contarse \citep{zanabria2026,cormen2022,skiena2020}.
+
+El acceso a una posición, la llamada a obtener una longitud y el retorno pueden incluirse en modelos más detallados. Este informe concentra la tabla principal en asignaciones, comparaciones, sumas y multiplicaciones, porque son las categorías solicitadas. Los accesos se reconocen conceptualmente, pero no se agregan como una quinta categoría para no mezclar criterios durante la suma total \citep{cook1973,cormen2022,zanabria2026}.
+
+\subsubsection{Funciones de crecimiento}
+
+Una función constante, como $T(n)=5$, no aumenta con $n$ dentro del modelo. Puede representar la consulta directa de una posición válida o una secuencia fija de instrucciones. La palabra constante no significa que el tiempo real sea exactamente igual en toda máquina, sino que el número modelado de pasos no depende del tamaño de la entrada \citep{cormen2022,sedgewick2011,skiena2020}.
+
+El crecimiento logarítmico aparece cuando cada paso reduce una parte del problema por un factor, por ejemplo al dividir repetidamente un intervalo a la mitad. Si se duplica $n$, el número de pasos aumenta aproximadamente en una unidad para base dos. Esta clase se menciona únicamente para comparar ritmos de crecimiento; su estudio algorítmico detallado corresponde a temas posteriores \citep{cormen2022,sedgewick2011,knuth1976}.
+
+El crecimiento lineal aparece cuando el trabajo es proporcional al número de elementos. Examinar una vez cada posición produce expresiones como $an+b$ y se representa introductoriamente mediante $O(n)$. La búsqueda del máximo es lineal porque, después de inicializar con el primer valor, compara cada uno de los $n-1$ elementos restantes exactamente una vez \citep{cormen2022,goodrichpy2013,skiena2020}.
+
+El crecimiento cuadrático aparece con frecuencia cuando, para cada uno de $n$ elementos, se realiza otro recorrido de $n$ elementos. El producto $n\cdot n$ produce $n^2$ ejecuciones del cuerpo interno. Duplicar $n$ hace que ese componente pase aproximadamente a ser cuatro veces mayor, diferencia que se vuelve decisiva para entradas grandes \citep{cormen2022,sedgewick2011,skiena2020}.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparación introductoria de funciones de crecimiento}
+\begin{tabular}{lrrrr}
+\toprule
+$n$ & $1$ & $\log_2 n$ & $n$ & $n^2$\\
+\midrule
+10 & 1 & 3.32 & 10 & 100\\
+100 & 1 & 6.64 & 100 & 10\,000\\
+1\,000 & 1 & 9.97 & 1\,000 & 1\,000\,000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Relación introductoria con el análisis asintótico}
+
+La función exacta conserva constantes y términos de menor grado producidos por el criterio de conteo. El análisis asintótico observa qué término domina cuando $n$ crece. Por ejemplo, $6n^2+5n+3$ es cuadrática porque $n^2$ termina dominando a $n$ y a la constante. La notación no afirma que los otros términos sean inexistentes, sino que no modifican la clase principal de crecimiento \citep{cormen2022,knuth1976,sedgewick2011}.
+
+En esta semana basta con reconocer y comparar los patrones constante, logarítmico, lineal y cuadrático. Una formalización completa de cotas superiores, inferiores y ajustadas requiere definiciones que se desarrollan posteriormente. Sin adelantarlas innecesariamente, puede afirmarse que el recorrido del máximo es $O(n)$ y el bloque doble es $O(n^2)$ bajo el modelo adoptado \citep{zanabria2026,cormen2022,knuth1976}.
+
+La clase de crecimiento no sustituye la corrección ni todos los detalles prácticos. Dos algoritmos lineales pueden tener constantes diferentes, y un algoritmo cuadrático puede ser suficiente para una entrada pequeña. Sin embargo, el crecimiento permite prever escalabilidad: al aumentar considerablemente $n$, la estructura del algoritmo suele importar más que pequeñas diferencias de velocidad del equipo \citep{sedgewick2011,skiena2020,cormen2022}.
+
+\clearpage
+\section{Desarrollo práctico}
+
+\subsection{Ficha diagnóstica razonada}
+
+\begin{enumerate}
+  \item \textbf{¿Qué es un algoritmo?} Es un conjunto finito, ordenado y no ambiguo de pasos que transforma una entrada en una salida para resolver un problema definido. Un ejemplo cotidiano es seguir una ruta: se parte de una ubicación, se ejecutan giros y desplazamientos precisos y se termina en el destino. Cumple la definición si las indicaciones son efectivas, están determinadas y concluyen.
+
+  \item \textbf{Propiedades.} La finitud exige terminación; la definición precisa elimina ambigüedades; la entrada indica los valores iniciales; la salida determina el resultado; y la efectividad exige pasos básicos que puedan ejecutarse en tiempo finito.
+
+  \item \textbf{Primitivo frente a TAD.} Un tipo primitivo es una categoría básica ya definida por el lenguaje, como un entero o un booleano. Un TAD especifica un conjunto de valores y operaciones con reglas propias, como una pila, y puede admitir varias implementaciones internas.
+
+  \item \textbf{Corrección.} Un algoritmo es correcto si satisface la especificación para toda entrada válida. La corrección parcial garantiza el resultado en caso de terminación; la total añade una prueba de que el algoritmo termina.
+
+  \item \textbf{Experiencia del grupo.} El grupo posee experiencia introductoria en variables, condicionales, ciclos, funciones, arreglos y compilación básica. Debe reforzar la formulación de invariantes, la demostración formal y el conteo de operaciones implícitas, porque estos aspectos requieren explicar no solo qué hace el código, sino por qué funciona y cuánto trabajo realiza.
+
+  \item \textbf{Fragmento de ciclos anidados.} El cuerpo se ejecuta $n^2$ veces. El conteo exacto cambia si se agrupan o expanden los controles del ciclo. En la Sección~\ref{sec:ramdoble} se adopta un criterio explícito y se obtiene la fórmula por categorías.
+\end{enumerate}
+
+\section{Implementación del algoritmo para encontrar el máximo}
+
+\subsection{Idea de solución}
+
+El algoritmo conserva el mayor valor observado. Inicialmente solo se ha observado el primer elemento, por lo que este es el máximo provisional. Después se recorren las posiciones restantes. Si el elemento actual es mayor, reemplaza al máximo; si no, se conserva el valor anterior. Al finalizar se han considerado todos los elementos.
+
+El arreglo común de prueba contiene 24 enteros:
+
+\[
+\begin{split}
+A={}&[34,-7,12,56,23,91,4,18,67,45,0,39,\\
+&72,11,8,63,27,50,16,5,88,31,-12,70].
+\end{split}
+\]
+
+\subsection{Implementación en Python}
+
+\lstinputlisting[style=codigo,language=Python,caption={Implementación completa y comentada en Python}]{../python/encontrar_maximo.py}
+
+\subsubsection{Explicación por bloques}
+
+\begin{itemize}
+  \item \textbf{Definición y validación:} la función recibe \codigo{arr}; si su longitud es cero, genera una excepción para hacer explícita la precondición.
+  \item \textbf{Inicialización:} asigna el primer elemento a \codigo{maximo}. En ese instante, el máximo del prefijo de un elemento ya es conocido.
+  \item \textbf{Recorrido:} el \codigo{for} comienza en el índice 1. Cada elemento se compara con el máximo provisional y solo se actualiza cuando es mayor.
+  \item \textbf{Retorno y prueba:} la función devuelve el resultado. El programa lo contrasta con \codigo{max(datos)} y muestra si ambos coinciden.
+\end{itemize}
+
+\subsection{Implementación en C++}
+
+\lstinputlisting[style=codigo,language=C++,caption={Implementación completa y comentada en C++}]{../cpp/encontrar_maximo.cpp}
+
+\subsubsection{Explicación por bloques}
+
+\begin{itemize}
+  \item \textbf{Bibliotecas:} se importan las herramientas para vectores, salida, excepciones y la verificación con \codigo{max\_element}.
+  \item \textbf{Función:} el vector se recibe mediante referencia constante para no copiarlo ni modificarlo. La entrada vacía produce una excepción.
+  \item \textbf{Recorrido:} una variable de tipo \codigo{std::size\_t} recorre índices válidos y se aplica la misma comparación que en Python.
+  \item \textbf{Programa principal:} crea los 24 valores, ejecuta el algoritmo, calcula una referencia independiente y termina con código cero cuando la verificación es correcta.
+\end{itemize}
+
+\section{Análisis de corrección de \codigo{encontrar\_maximo}}
+
+\subsection{Explicación comprensible}
+
+La función no intenta conocer el máximo desde el inicio. Mantiene una respuesta provisional que es correcta para la parte ya recorrida. Empieza con el primer elemento; después, al mirar un nuevo valor, solo existen dos posibilidades: el nuevo valor supera al máximo anterior y debe reemplazarlo, o no lo supera y el máximo anterior sigue siendo válido. Al repetir este razonamiento hasta el final, la respuesta provisional se convierte en el máximo de todo el arreglo.
+
+\subsection{Formalización del problema}
+
+Sea $A$ un arreglo de longitud $n$.
+
+\begin{description}
+  \item[Problema:] encontrar el mayor valor almacenado en $A$.
+  \item[Entrada:] arreglo finito $A[0\ldots n-1]$ con elementos comparables.
+  \item[Salida:] un valor $m$ que pertenece a $A$ y no es menor que ningún elemento.
+  \item[Precondición $P$:] $n\geq 1$ y la relación de comparación entre elementos está definida.
+  \item[Postcondición $Q$:] $m\in A\ \land\ \forall k\,(0\leq k<n\Rightarrow A[k]\leq m)$.
+\end{description}
+
+La tripleta de Hoare es:
+
+\begin{align*}
+P &: n\geq1\ \land\ A[0\ldots n-1]\text{ contiene elementos comparables},\\
+\{P\}\quad S_{\max}\quad\{Q\},\qquad
+Q &: m\in A\ \land\ \forall k\in[0,n-1],\ A[k]\leq m.
+\end{align*}
+
+\subsection{Invariante y demostración}
+
+\textbf{Invariante:} antes de cada iteración cuyo índice es $i$, con $1\leq i\leq n$, la variable \codigo{maximo} es el máximo del prefijo $A[0\ldots i-1]$.
+
+\subsubsection{Inicio}
+
+Antes de la primera iteración se tiene $i=1$ y se ha ejecutado $\codigo{maximo}=A[0]$. El prefijo $A[0\ldots0]$ contiene un solo elemento y su máximo es $A[0]$. Por tanto, el invariante es verdadero antes de comenzar el ciclo.
+
+\subsubsection{Preservación}
+
+Se supone que antes de una iteración el invariante es verdadero, de modo que \codigo{maximo} es el máximo de $A[0\ldots i-1]$. Si $A[i]>\codigo{maximo}$, se asigna $A[i]$ y el nuevo valor es el máximo de $A[0\ldots i]$. Si la condición es falsa, el máximo anterior también es mayor o igual que $A[i]$ y continúa siendo el máximo del prefijo ampliado. Después se incrementa $i$, de modo que el invariante queda establecido para la siguiente iteración.
+
+\subsubsection{Finalización}
+
+El ciclo termina cuando $i=n$. Al sustituir este valor en el invariante, \codigo{maximo} es el máximo de $A[0\ldots n-1]$, es decir, de todo el arreglo. Esta afirmación implica la postcondición. Además, $n-i$ es inicialmente finito, disminuye en uno en cada repetición y no puede disminuir indefinidamente sin llegar a cero. Por ello el ciclo termina.
+
+\subsubsection{Conclusión de la demostración}
+
+El inicio y la preservación demuestran la corrección parcial: si el ciclo finaliza, el resultado satisface la postcondición. El argumento mediante $n-i$ demuestra la terminación. La combinación de ambos establece la corrección total de \codigo{encontrar\_maximo} para cualquier arreglo que satisfaga la precondición.
+
+\section{Análisis mediante el modelo RAM}
+
+\subsection{Criterio adoptado}
+
+Para que el conteo sea reproducible, se asigna costo unitario a cada asignación, comparación, suma y multiplicación. Los controles de los ciclos se expanden en inicialización, condición e incremento. El acceso al arreglo y el retorno se reconocen, pero no se suman como categorías independientes porque el enunciado concentra el análisis en las cuatro categorías anteriores. Si se adoptara otra granularidad, cambiaría la fórmula exacta, no el crecimiento dominante.
+
+\subsection{Dos ciclos anidados}
+\label{sec:ramdoble}
+
+El fragmento analizado es:
+
+\begin{lstlisting}[style=codigo,language=Python,caption={Fragmento original}]
+s = 0
+for i in range(n):
+    for j in range(n):
+        s = s + i * j
+\end{lstlisting}
+
+Una representación equivalente que hace visibles las operaciones de control es:
+
+\begin{lstlisting}[style=codigo,language=Python,caption={Representación equivalente con ciclos while}]
+s = 0
+i = 0
+while i < n:
+    j = 0
+    while j < n:
+        s = s + i * j
+        j = j + 1
+    i = i + 1
+\end{lstlisting}
+
+\subsubsection{Por qué el cuerpo se ejecuta \texorpdfstring{$n^2$}{n²} veces}
+
+El ciclo exterior toma $n$ valores de $i$: $0,1,\ldots,n-1$. Para cada uno de ellos, el ciclo interior vuelve a comenzar en cero y toma $n$ valores de $j$. Por tanto, existen $n$ ejecuciones interiores por cada una de las $n$ ejecuciones exteriores:
+
+\[
+\underbrace{n+n+\cdots+n}_{n\text{ veces}}=n\cdot n=n^2.
+\]
+
+También puede verse como el conjunto de pares $(i,j)$. Para $n=3$ se procesan nueve pares: $(0,0),(0,1),(0,2),(1,0),\ldots,(2,2)$. Generalizar las tres filas y tres columnas a $n$ filas y $n$ columnas produce $n^2$ pares.
+
+\subsubsection{Conteo por categorías}
+
+\begin{longtable}{p{5.7cm}p{3cm}p{5cm}}
+\caption{Conteo expandido del fragmento con ciclos anidados}\\
+\toprule
+Operación & Frecuencia & Justificación\\
+\midrule
+\endfirsthead
+\toprule
+Operación & Frecuencia & Justificación\\
+\midrule
+\endhead
+Asignar $s=0$ & $1$ & Se ejecuta antes de los ciclos.\\
+Asignar $i=0$ & $1$ & Inicialización del ciclo exterior.\\
+Comparar $i<n$ & $n+1$ & Una vez por iteración y una comprobación final falsa.\\
+Asignar $j=0$ & $n$ & Se reinicia una vez por cada valor de $i$.\\
+Comparar $j<n$ & $n(n+1)=n^2+n$ & Para cada una de las $n$ vueltas exteriores hay $n$ verdaderas y una falsa.\\
+Multiplicar $i\cdot j$ & $n^2$ & Una vez por cada par $(i,j)$.\\
+Sumar $s+(i\cdot j)$ & $n^2$ & Una vez dentro de cada ejecución del cuerpo.\\
+Asignar el nuevo valor a $s$ & $n^2$ & La expresión actualiza $s$ en cada par.\\
+Sumar $j+1$ & $n^2$ & Incremento interior en cada ejecución.\\
+Asignar el nuevo valor a $j$ & $n^2$ & Almacena cada incremento interior.\\
+Sumar $i+1$ & $n$ & Incremento al terminar cada recorrido interior.\\
+Asignar el nuevo valor a $i$ & $n$ & Almacena cada incremento exterior.\\
+\bottomrule
+\end{longtable}
+
+Agrupando por categoría:
+
+\begin{align*}
+A(n)&=1+1+n+n^2+n^2+n=2n^2+2n+2,\\
+C(n)&=(n+1)+(n^2+n)=n^2+2n+1,\\
+S(n)&=n^2+n^2+n=2n^2+n,\\
+M(n)&=n^2.
+\end{align*}
+
+La suma de las cuatro categorías es:
+
+\[
+T(n)=A(n)+C(n)+S(n)+M(n)=6n^2+5n+3.
+\]
+
+Cada término tiene un origen identificable. Los $6n^2$ reúnen dos asignaciones por ejecución interior, una comparación interior dominante, dos sumas y una multiplicación. Los $5n$ proceden de reinicios e incrementos exteriores y de las comprobaciones finales interiores. La constante $3$ corresponde a las dos inicializaciones previas y a la comprobación final adicional del ciclo exterior. Esta fórmula solo es exacta bajo el criterio declarado.
+
+Si se cuentan únicamente las instrucciones visibles del cuerpo y se trata cada \codigo{for} como una construcción de control agrupada, se informaría una inicialización de $s$, $n^2$ multiplicaciones, $n^2$ sumas y $n^2$ asignaciones a $s$. Si además solo se consideran las comparaciones solicitadas de manera explícita, podría aparecer otra expresión. La diferencia no es una contradicción: responde a niveles distintos de descomposición. En todos los casos, el término dominante es proporcional a $n^2$.
+
+\subsection{Conteo de \codigo{encontrar\_maximo}}
+
+Para hacer comparable el análisis, se representa el recorrido como:
+
+\begin{lstlisting}[style=codigo,language=Python,caption={Búsqueda del máximo con control explícito}]
+maximo = A[0]
+i = 1
+while i < n:
+    if A[i] > maximo:
+        maximo = A[i]
+    i = i + 1
+return maximo
+\end{lstlisting}
+
+El ciclo tiene $n-1$ iteraciones. La comparación $A[i]>\codigo{maximo}$ se realiza $n-1$ veces. En el peor caso para las asignaciones, los elementos aparecen en orden estrictamente creciente y la actualización de \codigo{maximo} también ocurre $n-1$ veces. Si se consideran solamente las operaciones principales sobre los datos, hay $n-1$ comparaciones y $1+(n-1)=n$ asignaciones relacionadas con el máximo.
+
+Con el control expandido aparecen además una asignación inicial de $i$, $n$ comparaciones $i<n$, $n-1$ sumas de incremento y $n-1$ asignaciones de incremento. Por tanto, bajo el criterio completo:
+
+\begin{align*}
+A_{\max}(n)&=1+1+(n-1)+(n-1)=2n,\\
+C_{\max}(n)&=n+(n-1)=2n-1,\\
+S_{\max}(n)&=n-1.
+\end{align*}
+
+Todas estas funciones crecen linealmente. A diferencia del fragmento anterior, no existe un segundo recorrido completo por cada elemento; por ello no aparece un término $n^2$.
+
+\section{Resultados}
+
+Las pruebas se ejecutaron el 9 de septiembre de 2026 con Python 3.12.14 y g++ 13.3.0 en modo C++17. La compilación se realizó con \codigo{-Wall}, \codigo{-Wextra} y \codigo{-Wpedantic}; no se produjeron advertencias. Las dos salidas se compararon y no presentaron diferencias.
+
+\begin{table}[htbp]
+\centering
+\caption{Resultados de ejecución}
+\begin{tabularx}{\textwidth}{lXXX}
+\toprule
+Lenguaje & Cantidad de elementos & Máximo calculado & Verificación\\
+\midrule
+Python & 24 & 91 & CORRECTA\\
+C++ & 24 & 91 & CORRECTA\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El resultado real del arreglo es 91. En Python se contrastó con \codigo{max(datos)} y en C++ con \codigo{std::max\_element}. Estas funciones se usaron exclusivamente como referencia de prueba; el resultado principal fue obtenido por las implementaciones desarrolladas.
+
+\section{Comparación y discusión}
+
+\begin{table}[htbp]
+\centering
+\caption{Comparación de los algoritmos analizados}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{4.2cm}XX}
+\toprule
+Aspecto & Encontrar máximo & Ciclos anidados\\
+\midrule
+Estructura & Un recorrido desde el segundo elemento & Un recorrido completo dentro de otro\\
+Ejecuciones principales & $n-1$ comparaciones de datos & $n^2$ ejecuciones del cuerpo\\
+Crecimiento dominante & Lineal, $O(n)$ & Cuadrático, $O(n^2)$\\
+Efecto aproximado de duplicar $n$ & Duplica el trabajo dominante & Cuadruplica el trabajo dominante\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+La comparación muestra que una diferencia estructural pequeña en el código puede generar una diferencia grande al crecer la entrada. Ambos fragmentos son finitos y sus operaciones son efectivas, pero recorren espacios de tamaños distintos. Esta observación justifica analizar el costo mediante $n$ y no depender solamente de una medición puntual.
+
+También se confirma que corrección y eficiencia son propiedades distintas. La demostración del máximo garantiza su resultado y terminación; el conteo muestra además que lo obtiene con crecimiento lineal. Si se propusiera otro algoritmo correcto que comparase repetidamente los mismos elementos, la corrección podría conservarse mientras empeora el costo.
+
+\section{Dificultades encontradas y aprendizaje}
+
+La primera dificultad fue comprender que el modelo RAM no describe exactamente un procesador particular, sino una máquina ideal utilizada para comparar algoritmos. La dificultad se resolvió separando tiempo físico y número de operaciones: una computadora puede ser más rápida que otra, pero ambas ejecutan el mismo patrón de $n$ o $n^2$ pasos bajo el criterio abstracto.
+
+La segunda dificultad fue contar las operaciones implícitas de un \codigo{for}. La sintaxis oculta la inicialización, la comparación que permite continuar y el incremento. Reescribir los ciclos mediante \codigo{while} hizo visibles estas acciones y permitió justificar cada término del conteo, incluida la comparación final falsa.
+
+La tercera dificultad fue comprender los invariantes. Al inicio podían parecer afirmaciones demasiado formales. Se entendieron al interpretarlos como el significado de las variables durante un avance parcial: \codigo{maximo} no representa desde el primer instante el máximo global, sino el máximo de la parte que ya se revisó.
+
+Finalmente, fue necesario distinguir corrección parcial y total. La corrección parcial estudia el resultado suponiendo que el proceso termina; la total agrega una prueba de terminación. El ejemplo de un índice que no se incrementa mostró que una propiedad puede preservarse y, aun así, el programa quedar atrapado en un ciclo.
+
+\section{Aspectos que resultaron interesantes}
+
+Un aspecto central es que un algoritmo correcto no necesariamente es eficiente. La especificación y su demostración determinan si la respuesta es válida, mientras el análisis de costo estudia los recursos utilizados. Evaluar solamente una de estas dimensiones deja incompleta la valoración de una solución.
+
+También resulta importante que el costo pueda estudiarse sin depender de la velocidad exacta de una computadora. El modelo RAM abstrae diferencias de hardware y permite observar la estructura del procedimiento. Esto hace posible comparar dos propuestas antes de implementarlas en todos los equipos posibles.
+
+La diferencia entre un recorrido y dos ciclos anidados se vuelve clara al pensar en elementos y pares. Un recorrido procesa aproximadamente $n$ posiciones; los ciclos anidados procesan $n^2$ pares. Al duplicar la entrada, el primero aproximadamente duplica su trabajo y el segundo lo cuadruplica.
+
+Finalmente, la demostración formal muestra que la confianza en un algoritmo no tiene que depender solo de ejemplos. La precondición aclara cuándo puede aplicarse; el invariante explica por qué cada paso conserva el progreso; y la finalización conecta ese progreso con la respuesta requerida.
+
+\section{Conclusiones}
+
+\begin{enumerate}
+  \item Un algoritmo requiere una entrada y una salida definidas, pasos precisos y efectivos, y terminación finita; estas propiedades hacen posible implementarlo y analizarlo, aunque todavía se necesita probar su corrección.
+  \item Los TAD separan las operaciones observables de los detalles internos. Esta separación permite implementar una misma abstracción con estructuras diferentes sin modificar el código usuario cuando se conserva el contrato.
+  \item La tripleta de Hoare organiza la relación entre supuestos, programa y resultado. Para \codigo{encontrar\_maximo}, el invariante establece que el máximo provisional corresponde siempre al prefijo ya procesado.
+  \item El inicio, la preservación y la finalización prueban la corrección parcial; el descenso de $n-i$ demuestra terminación. En conjunto se obtiene corrección total para arreglos no vacíos de elementos comparables.
+  \item Bajo el conteo expandido adoptado, los ciclos anidados producen $T(n)=6n^2+5n+3$, mientras las categorías de \codigo{encontrar\_maximo} permanecen lineales. La fórmula exacta depende del criterio, pero los crecimientos cuadrático y lineal no cambian.
+  \item Las implementaciones en Python y C++ se ejecutaron sobre 24 elementos y ambas devolvieron 91. La coincidencia con referencias estándar y entre lenguajes aporta evidencia experimental consistente con la demostración general.
+\end{enumerate}
+
+\clearpage
+\section{Referencias bibliográficas}
+
+\begin{thebibliography}{99}
+\setlength{\itemsep}{0.65em}
+
+\bibitem[Cook y Reckhow(1973)]{cook1973}
+Cook, S. A., \& Reckhow, R. A. (1973). Time bounded random access machines. \textit{Journal of Computer and System Sciences, 7}(4), 354--375. \url{https://doi.org/10.1016/S0022-0000(73)80029-7}
+
+\bibitem[Cormen et al.(2022)]{cormen2022}
+Cormen, T. H., Leiserson, C. E., Rivest, R. L., \& Stein, C. (2022). \textit{Introduction to algorithms} (4.ª ed.). MIT Press. \url{https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/}
+
+\bibitem[Dijkstra(1975)]{dijkstra1975}
+Dijkstra, E. W. (1975). Guarded commands, nondeterminacy and formal derivation of programs. \textit{Communications of the ACM, 18}(8), 453--457. \url{https://doi.org/10.1145/360933.360975}
+
+\bibitem[Goodrich et al.(2013)]{goodrichpy2013}
+Goodrich, M. T., Tamassia, R., \& Goldwasser, M. H. (2013). \textit{Data structures and algorithms in Python}. Wiley. \url{https://www.wiley.com/en-us/Data+Structures+and+Algorithms+in+Python-p-9781118290279}
+
+\bibitem[Goodrich et al.(2011)]{goodrichcpp2011}
+Goodrich, M. T., Tamassia, R., \& Mount, D. M. (2011). \textit{Data structures and algorithms in C++} (2.ª ed.). Wiley. \url{https://www.wiley.com/en-us/Data+Structures+and+Algorithms+in+C++++2nd+Edition-p-9781118136638}
+
+\bibitem[Hoare(1969)]{hoare1969}
+Hoare, C. A. R. (1969). An axiomatic basis for computer programming. \textit{Communications of the ACM, 12}(10), 576--580, 583. \url{https://doi.org/10.1145/363235.363259}
+
+\bibitem[Knuth(1976)]{knuth1976}
+Knuth, D. E. (1976). Big omicron and big omega and big theta. \textit{ACM SIGACT News, 8}(2), 18--24. \url{https://doi.org/10.1145/1008328.1008329}
+
+\bibitem[Knuth(1997)]{knuth1997}
+Knuth, D. E. (1997). \textit{The art of computer programming: Vol. 1. Fundamental algorithms} (3.ª ed.). Addison-Wesley.
+
+\bibitem[Liskov y Zilles(1974)]{liskov1974}
+Liskov, B., \& Zilles, S. (1974). Programming with abstract data types. \textit{ACM SIGPLAN Notices, 9}(4), 50--59. \url{https://doi.org/10.1145/942572.807045}
+
+\bibitem[Python Software Foundation(2026)]{python2026}
+Python Software Foundation. (2026). \textit{Data structures}. Python 3 documentation. \url{https://docs.python.org/3/tutorial/datastructures.html}
+
+\bibitem[Sedgewick y Wayne(2011)]{sedgewick2011}
+Sedgewick, R., \& Wayne, K. (2011). \textit{Algorithms} (4.ª ed.). Addison-Wesley Professional. \url{https://algs4.cs.princeton.edu/home/}
+
+\bibitem[Skiena(2020)]{skiena2020}
+Skiena, S. S. (2020). \textit{The algorithm design manual} (3.ª ed.). Springer. \url{https://doi.org/10.1007/978-3-030-54256-6}
+
+\bibitem[Zanabria Gálvez(2026)]{zanabria2026}
+Zanabria Gálvez, A. H. (2026). \textit{Material de la Semana 1: Introducción a algoritmos y estructuras de datos, tipos abstractos de datos, corrección y modelo RAM} [Material de curso]. Universidad Nacional del Altiplano.
+
+\end{thebibliography}
+
+\clearpage
+\appendix
+\section{Evidencia de ejecución}
+
+\begin{lstlisting}[style=codigo,caption={Salida común verificada en Python y C++}]
+Arreglo (24 elementos): [34, -7, 12, 56, 23, 91, 4, 18,
+67, 45, 0, 39, 72, 11, 8, 63, 27, 50, 16, 5, 88, 31,
+-12, 70]
+Maximo calculado: 91
+Maximo de referencia: 91
+Verificacion: CORRECTA
+\end{lstlisting}
+
+\section{Preguntas probables para la sustentación}
+
+\begin{enumerate}
+  \item ¿Qué diferencia existe entre un algoritmo y un programa?
+  \item ¿Cuáles son las cinco propiedades de un algoritmo?
+  \item ¿Por qué el arreglo no vacío forma parte de la precondición?
+  \item ¿Qué diferencia existe entre un tipo primitivo y un TAD?
+  \item ¿Por qué una pila puede tener varias implementaciones?
+  \item ¿Cómo se lee la tripleta $\{P\}S\{Q\}$?
+  \item ¿Cuál es el invariante de \codigo{encontrar\_maximo}?
+  \item ¿Cómo se demuestran inicio, preservación y finalización?
+  \item ¿Qué diferencia existe entre corrección parcial y total?
+  \item ¿Por qué $n-i$ permite demostrar terminación?
+  \item ¿Qué operaciones se consideran elementales en el conteo adoptado?
+  \item ¿Por qué el cuerpo interno se ejecuta $n^2$ veces?
+  \item ¿Por qué distintas convenciones producen fórmulas exactas diferentes?
+  \item ¿Cuántas comparaciones de datos realiza la búsqueda del máximo?
+  \item ¿En qué caso se actualiza \codigo{maximo} el mayor número de veces?
+  \item ¿Por qué un algoritmo correcto no necesariamente es eficiente?
+  \item ¿Qué diferencia existe entre tiempo medido y costo teórico?
+  \item ¿Cómo se verificaron las implementaciones en los dos lenguajes?
+\end{enumerate}
+
+\section{Conceptos prioritarios para estudiar}
+
+Antes de sustentar, los integrantes deben poder explicar sin leer: las cinco propiedades de un algoritmo; la diferencia entre interfaz e implementación; la corrección parcial y total; la tripleta de Hoare; el invariante del máximo; las tres etapas de su demostración; el criterio de conteo RAM; el origen de $n-1$ y $n^2$; y la diferencia entre corrección y eficiencia. También deben saber ejecutar ambos programas y describir la función de cada bloque.
+
+\end{document}

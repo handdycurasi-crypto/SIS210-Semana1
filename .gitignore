@@ -1,0 +1,8 @@
+cpp/encontrar_maximo
+informe/*.aux
+informe/*.log
+informe/*.out
+informe/*.toc
+informe/*.fls
+informe/*.fdb_latexmk
+

@@ -1,0 +1,32 @@
+PRUEBAS REALES DEL PROYECTO SIS210 - SEMANA 1
+Fecha de ejecucion: 9 de septiembre de 2026 (UTC)
+
+Entorno utilizado
+- Python 3.12.14
+- g++ 13.3.0
+- Estandar de compilacion: C++17
+- Opciones: -Wall -Wextra -Wpedantic
+
+Comando Python
+python3 python/encontrar_maximo.py
+
+Salida Python
+Arreglo (24 elementos): [34, -7, 12, 56, 23, 91, 4, 18, 67, 45, 0, 39, 72, 11, 8, 63, 27, 50, 16, 5, 88, 31, -12, 70]
+Maximo calculado: 91
+Maximo de referencia: 91
+Verificacion: CORRECTA
+
+Comandos C++
+g++ -std=c++17 -Wall -Wextra -Wpedantic cpp/encontrar_maximo.cpp -o cpp/encontrar_maximo
+./cpp/encontrar_maximo
+
+Salida C++
+Arreglo (24 elementos): [34, -7, 12, 56, 23, 91, 4, 18, 67, 45, 0, 39, 72, 11, 8, 63, 27, 50, 16, 5, 88, 31, -12, 70]
+Maximo calculado: 91
+Maximo de referencia: 91
+Verificacion: CORRECTA
+
+Comprobacion cruzada
+Las salidas de Python y C++ fueron comparadas con diff. No se encontraron diferencias.
+Ambos procesos terminaron con codigo de salida 0.
+
