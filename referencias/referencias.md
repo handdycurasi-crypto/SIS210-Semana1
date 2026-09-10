@@ -1,5 +1,9 @@
 # Referencias verificadas (APA 7.ª edición)
 
+Aho, A. V., Hopcroft, J. E., & Ullman, J. D. (1974). *The design and analysis of computer algorithms*. Addison-Wesley.
+
+Apt, K. R., de Boer, F. S., & Olderog, E.-R. (2009). *Verification of sequential and concurrent programs* (3rd ed.). Springer. https://doi.org/10.1007/978-1-84882-745-5
+
 Cook, S. A., & Reckhow, R. A. (1973). Time bounded random access machines. *Journal of Computer and System Sciences, 7*(4), 354-375. https://doi.org/10.1016/S0022-0000(73)80029-7
 
 Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). *Introduction to algorithms* (4th ed.). MIT Press. https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/
@@ -25,3 +29,5 @@ Sedgewick, R., & Wayne, K. (2011). *Algorithms* (4th ed.). Addison-Wesley Profes
 Skiena, S. S. (2020). *The algorithm design manual* (3rd ed.). Springer. https://doi.org/10.1007/978-3-030-54256-6
 
 Zanabria Galvez, A. H. (2026). *Material de la Semana 1: Introduccion a algoritmos y estructuras de datos, tipos abstractos de datos, correccion y modelo RAM* [Material de curso]. Universidad Nacional del Altiplano.
+
+Wirth, N. (1976). *Algorithms + data structures = programs*. Prentice-Hall.

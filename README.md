@@ -14,7 +14,9 @@ Trabajo academico grupal de la **Universidad Nacional del Altiplano - Puno**, Es
 
 ## Objetivo
 
-Profundizar los contenidos de la Semana 1 del curso: concepto y propiedades de los algoritmos, tipos abstractos de datos, correccion parcial y total, logica de Hoare, invariantes de ciclo, costo computacional y modelo RAM. El proyecto implementa y verifica el algoritmo `encontrar_maximo` en Python y C++ y compara su crecimiento lineal con un fragmento de dos ciclos anidados de crecimiento cuadratico.
+Profundizar los contenidos de la Semana 1 mediante doce nucleos teoricos articulados: concepto de algoritmo; entrada y salida; propiedades; tipos primitivos; fundamentos de los TAD; interfaz e implementacion; ejemplos de TAD; correccion; correccion parcial y total; logica de Hoare; invariantes; y costo computacional con modelo RAM. El proyecto conserva la implementacion ya verificada de `encontrar_maximo` en Python y C++ y compara su crecimiento lineal con un fragmento de dos ciclos anidados de crecimiento cuadratico.
+
+El informe propone cuatro nucleos de preparacion por integrante para facilitar una sustentacion grupal equilibrada. Esta division organiza el estudio, pero el desarrollo explica las conexiones entre los doce nucleos.
 
 ## Estructura
 
@@ -77,6 +79,10 @@ pdflatex -interaction=nonstopmode -halt-on-error informe.tex
 
 La segunda compilacion actualiza correctamente el indice y las referencias internas.
 
-## Estado del repositorio
+## Repositorio GitHub
 
-La carpeta esta preparada para publicarse, pero **no ha sido subida automaticamente a GitHub**. Antes de publicarla se puede crear un repositorio, copiar su URL en la caratula del informe y realizar el primer `commit`.
+El trabajo está publicado en GitHub y puede consultarse en:
+
+**https://github.com/handdycurasi-crypto/SIS210-Semana1**
+
+El repositorio conserva el código en Python y C++, el informe en LaTeX/PDF, las pruebas y las referencias utilizadas en el trabajo.
